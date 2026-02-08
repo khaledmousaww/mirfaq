@@ -1,0 +1,147 @@
+.fiqh-tip {
+  background: #eff6ff;
+  border-right: 4px solid #3b82f6;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 16px 0;
+  font-size: 0.95rem;
+}
+
+.fiqh-tip .example {
+  margin-top: 6px;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+/* ===============================
+   Fasting Page – Marfaq
+================================ */
+
+.fasting-page {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: "Cairo", sans-serif;
+}
+
+/* العنوان */
+.fasting-page h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.9rem;
+  font-weight: 800;
+}
+
+/* الصندوق الرئيسي */
+.box {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* العناوين داخل الصندوق */
+.box h2 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+/* الليبل */
+.box label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+/* inputs & select */
+.box input,
+.box select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+/* زرار أساسي */
+.box button {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 800;
+  cursor: pointer;
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.box button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* زر صمت اليوم */
+button.primary {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+/* النصيحة الفقهية */
+.fiqh-tip {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0c4a6e;
+}
+
+.fiqh-tip strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+
+.fiqh-tip p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.fiqh-tip .example {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* النص التحفيزي */
+.motivation {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 14px;
+  background: #ecfeff;
+  color: #155e75;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* فقرات عادية */
+.box p {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .fasting-page {
+    padding: 16px;
+  }
+
+  .fasting-page h1 {
+    font-size: 1.6rem;
+  }
+}
