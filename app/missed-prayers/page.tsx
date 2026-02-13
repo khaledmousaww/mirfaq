@@ -1,168 +1,156 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import MissedNavbar from "../components/MissedNavbar";
 import MissedFooter from "../components/MissedFooter";
 import "./missed-prayers.css";
 
 /* ===== ثوابت ===== */
-const STORAGE_KEY = "qadaData";
-const PRAYERS = ["الفجر", "الظهر", "العصر", "المغرب", "العشاء"];
-const PRAYERS_PER_DAY = 5;
-const DAYS_PER_YEAR = 365;
-const MAX_YEARS = 80;
-const DEFAULT_PLAN_DAYS = 365;
 
-const MOTIVATION = [
-  "🌱 لا تنظر لكثرة ما فات، بل لصدق ما بدأ.",
-  "⭐ كل صلاة خطوة نور.",
-  "🤍 الطريق طويل، لكنك بدأت.",
-  "🕊️ الله لا يضيع مجهود الصادقين.",
-  "☀️ استمر، فالأجر أمامك.",
+const STORAGE_KEY = "qadaData";
+
+const PRAYERS = ["الفجر", "الظهر", "العصر", "المغرب", "العشاء"];
+
+const MODES = [
+  { label: "انقطاع تام", value: 1 },
+  { label: "تقصير شديد", value: 0.8 },
+  { label: "تقصير متوسط", value: 0.5 },
+  { label: "تقصير بسيط", value: 0.2 },
 ];
 
 type ViewMode = "calculator" | "plan";
 
 export default function MissedPrayersPage() {
-  /* ===== وضع الصفحة ===== */
+  /* ===== الحالة ===== */
+
   const [view, setView] = useState<ViewMode>("calculator");
 
-  /* ===== إدخالات ===== */
-  const [years, setYears] = useState(0);
-  const [mode, setMode] = useState("none");
-  const [dailyPrayed, setDailyPrayed] = useState(0);
-  const [yearRatio, setYearRatio] = useState(0);
+  const [age, setAge] = useState(0);
+  const [pubertyAge, setPubertyAge] = useState(13);
+  const [commitYears, setCommitYears] = useState(0);
+  const [gender, setGender] = useState("male");
 
-  /* ===== نتائج ===== */
+  const [nonPrayerDays, setNonPrayerDays] = useState(0); // للإناث
+
+  const [modeRate, setModeRate] = useState(1);
+  const [fiqhMode, setFiqhMode] = useState<"easy" | "safe">("safe");
+
   const [total, setTotal] = useState(0);
   const [initialTotal, setInitialTotal] = useState(0);
-  const [byPrayer, setByPrayer] = useState<number[]>([]);
+  const [missedByPrayer, setMissedByPrayer] = useState<number[]>([]);
+
   const [motivation, setMotivation] = useState("");
 
-  /* ===== الخطة ===== */
-  const [planDays, setPlanDays] = useState<number | null>(null);
-  const [autoSuggested, setAutoSuggested] = useState(false);
+  /* ===== تحميل البيانات ===== */
 
-  const dailyTarget =
-    planDays && total > 0 ? Math.ceil(total / planDays) : null;
-
-  /* ===== إنجاز اليوم ===== */
-  const [todayDone, setTodayDone] = useState(0);
-  const todayKey = new Date().toISOString().slice(0, 10);
-
-  /* ===== تحميل ===== */
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return;
 
     const data = JSON.parse(saved);
 
-    setYears(data.years ?? 0);
-    setMode(data.mode ?? "none");
-    setDailyPrayed(data.dailyPrayed ?? 0);
-    setYearRatio(data.yearRatio ?? 0);
     setTotal(data.missedTotal ?? 0);
-    setInitialTotal(data.initialTotal ?? data.missedTotal ?? 0);
-    setByPrayer(data.missedByPrayer ?? []);
-    setPlanDays(data.planDays ?? null);
+    setInitialTotal(data.initialTotal ?? 0);
+    setMissedByPrayer(data.missedByPrayer ?? []);
     setView(data.qadaPlan?.active ? "plan" : "calculator");
-
-    if (data.todayKey === todayKey) {
-      setTodayDone(data.todayDone ?? 0);
-    } else {
-      setTodayDone(0);
-    }
-
-    if (data.qadaPlan?.active && !data.planDays) {
-      setPlanDays(DEFAULT_PLAN_DAYS);
-      setAutoSuggested(true);
-      data.planDays = DEFAULT_PLAN_DAYS;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    setMotivation(MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)]);
   }, []);
 
-  /* ===== حساب ===== */
-  const calculate = () => {
-    let missed = 0;
+  /* ===== الحساب ===== */
 
-    if (mode === "none") {
-      missed = years * DAYS_PER_YEAR * PRAYERS_PER_DAY;
-    } else if (mode === "sometimes") {
-      missed =
-        years *
-        DAYS_PER_YEAR *
-        Math.max(0, PRAYERS_PER_DAY - dailyPrayed);
-    } else {
-      missed =
-        years *
-        DAYS_PER_YEAR *
-        PRAYERS_PER_DAY *
-        yearRatio;
+  function calculate() {
+    let negligenceYears = age - pubertyAge - commitYears;
+
+    if (negligenceYears < 0) negligenceYears = 0;
+
+    let grossDays = negligenceYears * 365.25;
+
+    if (gender === "female") {
+      const annualExclude = nonPrayerDays * 12;
+      grossDays -= annualExclude * negligenceYears;
     }
 
-    const result = Math.round(missed);
-    const perPrayer = Math.round(result / PRAYERS_PER_DAY);
+    let targetDays = grossDays * modeRate;
 
-    const data = {
-      years,
-      mode,
-      dailyPrayed,
-      yearRatio,
-      missedTotal: result,
-      initialTotal: result,
-      missedByPrayer: PRAYERS.map(() => perPrayer),
-      qadaPlan: { active: false },
-    };
+    // التيسير أو الأحوط
+    if (fiqhMode === "safe") {
+      targetDays = Math.ceil(targetDays);
+    } else {
+      targetDays = Math.floor(targetDays);
+    }
+
+    const result = Math.max(0, Math.round(targetDays));
 
     setTotal(result);
     setInitialTotal(result);
-    setByPrayer(data.missedByPrayer);
-    setMotivation(MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)]);
+
+    const data = {
+      missedTotal: result,
+      initialTotal: result,
+      qadaPlan: { active: false },
+    };
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  };
+  }
 
   /* ===== بدء الخطة ===== */
-  const startPlan = () => {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    saved.qadaPlan = { active: true };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+  function startPlan() {
+    const perPrayer = total;
+
+    const data = {
+      missedTotal: total * 5,
+      initialTotal: total * 5,
+      missedByPrayer: PRAYERS.map(() => perPrayer),
+      qadaPlan: { active: true },
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+    setMissedByPrayer(data.missedByPrayer);
+    setTotal(data.missedTotal);
+    setInitialTotal(data.initialTotal);
+
     setView("plan");
-  };
+  }
 
-  /* ===== قضاء ===== */
-  const doQada = (index: number) => {
-    if (byPrayer[index] === 0) return;
+  /* ===== خصم صلاة ===== */
 
-    const updated = [...byPrayer];
-    updated[index] -= 1;
-
-    const newTotal = Math.max(0, total - 1);
-
-    setByPrayer(updated);
-    setTotal(newTotal);
-    setTodayDone((p) => p + 1);
-
+  function handleQada(index: number) {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+    if (!saved.qadaPlan?.active) return;
+
+    const updated = [...saved.missedByPrayer];
+
+    if (updated[index] <= 0) return;
+
+    updated[index] -= 1;
+    saved.missedTotal -= 1;
     saved.missedByPrayer = updated;
-    saved.missedTotal = newTotal;
-    saved.todayDone = (saved.todayDone ?? 0) + 1;
-    saved.todayKey = todayKey;
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-  };
 
-  /* ===== Reset ===== */
-  const resetAll = () => {
+    setMissedByPrayer(updated);
+    setTotal(saved.missedTotal);
+
+    const msgs = [
+      "🔥 ممتاز.. استمر",
+      "✨ خطوة نور",
+      "🤍 ربنا يتقبل",
+      "🚀 قربت توصل",
+    ];
+
+    setMotivation(msgs[Math.floor(Math.random() * msgs.length)]);
+  }
+
+  /* ===== إعادة الحساب ===== */
+
+  function resetAll() {
     localStorage.removeItem(STORAGE_KEY);
     setView("calculator");
     setTotal(0);
-    setInitialTotal(0);
-    setByPrayer([]);
-    setPlanDays(null);
-    setTodayDone(0);
-    setAutoSuggested(false);
-  };
+    setMissedByPrayer([]);
+  }
 
   const progress =
     initialTotal > 0
@@ -174,85 +162,99 @@ export default function MissedPrayersPage() {
       <MissedNavbar />
 
       <main className="missed-container missed-page">
-        <h1>الصلوات الفائتة</h1>
+        <h1>قضاء الصلوات</h1>
 
-        {/* ===== الحاسبة ===== */}
+        {/* ================= الحساب ================= */}
+
         {view === "calculator" && (
           <div className="calculator-box">
-            <label>عدد السنوات:</label>
+            <label>السن الحالي:</label>
             <input
-              type="text"
+              value={age || ""}
               inputMode="numeric"
-              pattern="[0-9]*"
-              placeholder="مثال: 5"
-              value={years === 0 ? "" : years}
-              onChange={(e) => {
-                const v = e.target.value.replace(/\D/g, "");
-                const n = v ? Number(v) : 0;
-                setYears(n > MAX_YEARS ? MAX_YEARS : n);
-              }}
+              onChange={(e) =>
+                setAge(Number(e.target.value.replace(/\D/g, "")))
+              }
             />
 
-            <label>حالتك مع الصلاة:</label>
-            <select value={mode} onChange={(e) => setMode(e.target.value)}>
-              <option value="none">لم أكن أصلي</option>
-              <option value="sometimes">أصلي أحيانًا</option>
-              <option value="periods">أصلي فترة وأترك فترة</option>
+            <label>سن البلوغ:</label>
+            <input
+              value={pubertyAge || ""}
+              inputMode="numeric"
+              onChange={(e) =>
+                setPubertyAge(Number(e.target.value.replace(/\D/g, "")))
+              }
+            />
+
+            <label>سنوات الالتزام:</label>
+            <input
+              value={commitYears || ""}
+              inputMode="numeric"
+              onChange={(e) =>
+                setCommitYears(Number(e.target.value.replace(/\D/g, "")))
+              }
+            />
+
+            <label>النوع:</label>
+            <select onChange={(e) => setGender(e.target.value)}>
+              <option value="male">ذكر</option>
+              <option value="female">أنثى</option>
             </select>
 
-            {mode === "sometimes" && (
+            {gender === "female" && (
               <>
-                <label>كنت تصلي كام صلاة يوميًا؟</label>
-                <select
-                  value={dailyPrayed}
-                  onChange={(e) => setDailyPrayed(+e.target.value)}
-                >
-                  <option value={1}>صلاة واحدة</option>
-                  <option value={2}>صلاتين</option>
-                  <option value={3}>ثلاث صلوات</option>
-                  <option value={4}>أربع صلوات</option>
-                </select>
+                <label>الأيام غير المكلّفة بالصلاة شهريًا:</label>
+                <input
+                  inputMode="numeric"
+                  value={nonPrayerDays || ""}
+                  onChange={(e) =>
+                    setNonPrayerDays(
+                      Number(e.target.value.replace(/\D/g, ""))
+                    )
+                  }
+                />
               </>
             )}
 
-            {mode === "periods" && (
-              <>
-                <label>كنت تصلي قد إيه من السنة؟</label>
-                <select
-                  value={yearRatio}
-                  onChange={(e) => setYearRatio(+e.target.value)}
-                >
-                  <option value={0.25}>ربع السنة</option>
-                  <option value={0.5}>نصف السنة</option>
-                  <option value={0.75}>ثلاثة أرباع السنة</option>
-                </select>
-              </>
-            )}
+            <label>نمط التقصير:</label>
+            <select onChange={(e) => setModeRate(Number(e.target.value))}>
+              {MODES.map((m) => (
+                <option key={m.label} value={m.value}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
 
-            <button onClick={calculate}>احسب الصلوات الفائتة</button>
+            <label>طريقة الحساب الفقهي:</label>
+            <select onChange={(e) => setFiqhMode(e.target.value as any)}>
+              <option value="safe">الأحوط (الأكثر)</option>
+              <option value="easy">التيسير (الأقل)</option>
+            </select>
+
+            <button onClick={calculate}>احسب الصلوات</button>
 
             {total > 0 && (
               <>
-                <p>إجمالي الصلوات: <strong>{total}</strong></p>
-                <div className="motivation-text">{motivation}</div>
+                <p>
+                  عدد الأيام التقريبية: <strong>{total}</strong>
+                </p>
                 <button onClick={startPlan}>ابدأ خطة القضاء</button>
               </>
             )}
           </div>
         )}
 
-        {/* ===== الخطة ===== */}
+        {/* ================= الخطة ================= */}
+
         {view === "plan" && (
           <>
             <div className="plan-header">
-              <h2>خطة القضاء الجارية</h2>
-              <button className="reset-btn" onClick={resetAll}>
-                تعديل الحساب
-              </button>
+              <h2>الخطة الجارية</h2>
+              <button onClick={resetAll}>إعادة الحساب</button>
             </div>
 
             <div className="progress-wrapper">
-              <div className="progress-label">التقدم: {progress}%</div>
+              <div className="progress-label">التقدم {progress}%</div>
               <div className="progress-bar">
                 <div
                   className="progress-fill"
@@ -261,48 +263,26 @@ export default function MissedPrayersPage() {
               </div>
             </div>
 
-            <div className="calculator-box">
-              <label>مدة الخطة:</label>
-              <select
-                value={planDays ?? ""}
-                onChange={(e) => {
-                  const d = +e.target.value;
-                  setPlanDays(d);
-                  setAutoSuggested(false);
-
-                  const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-                  s.planDays = d;
-                  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-                }}
-              >
-                <option value={365}>سنة</option>
-                <option value={730}>سنتين</option>
-                <option value={1095}>3 سنوات</option>
-                <option value={1278}>3 سنين ونص</option>
-                <option value={1460}>4 سنوات</option>
-              </select>
-
-              {autoSuggested && (
-                <div className="motivation-text" style={{ opacity: 0.8 }}>
-                  📌 تم اقتراح خطة سنة تلقائيًا – يمكنك تغييرها
-                </div>
-              )}
-
-              <div className="motivation-text">
-                📅 ستقضي يوميًا {dailyTarget} صلوات
-                <br />
-                ✅ أنجزت اليوم: {todayDone} / {dailyTarget}
-              </div>
-            </div>
-
             <div className="qada-cards">
               {PRAYERS.map((p, i) => (
                 <div key={p} className="qada-card">
                   <strong>{p}</strong>
-                  <p>المتبقي: {byPrayer[i]}</p>
-                  <button onClick={() => doQada(i)}>تم القضاء</button>
+                  <p>المتبقي: {missedByPrayer[i]}</p>
+
+                  <button
+                    onClick={() => handleQada(i)}
+                    disabled={missedByPrayer[i] === 0}
+                  >
+                    تم القضاء
+                  </button>
                 </div>
               ))}
+            </div>
+
+            <div className="motivation-text">
+              {total === 0
+                ? "🎉 تقبّل الله منك"
+                : motivation || "🌱 استمر… أنت على الطريق"}
             </div>
           </>
         )}

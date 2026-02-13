@@ -640,3 +640,18 @@ body.dark .prayer-notice {
     text-align: center;
   }
 }
+
+
+.quran-page {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.quran-wrapper {
+  background: #fff;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}

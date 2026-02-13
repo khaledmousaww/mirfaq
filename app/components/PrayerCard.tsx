@@ -96,7 +96,7 @@ export default function PrayerCard({ name, time, prayerIndex }: Props) {
             onClick={handlePrayed}
             disabled={prayed}
           >
-            {prayed ? "✅ تمت" : "صليت"}
+            {prayed ? "✅ تمت" : "صليت؟"}
           </button>
 
           <button
@@ -104,7 +104,7 @@ export default function PrayerCard({ name, time, prayerIndex }: Props) {
             onClick={handleQada}
             disabled={isQadaDone}
           >
-            {isQadaDone ? "✅ تم القضاء" : "قضيت"}
+            {isQadaDone ? "✅ تم القضاء" : "قضيت؟"}
           </button>
         </div>
       </div>

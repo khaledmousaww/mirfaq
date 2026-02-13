@@ -1,23 +1,33 @@
-export default function Navbar() {
+"use client";
+
+import { useEffect, useState } from "react";
+
+export default function TopBar() {
+
+  const [dateText, setDateText] = useState("");
+
+  useEffect(() => {
+    const now = new Date();
+
+    const formatted = now.toLocaleDateString("ar-EG", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    setDateText(formatted);
+  }, []);
+
   return (
-    <nav className="site-navbar">
-      <div className="nav-inner">
-
-        {/* اليمين: اللوجو + السلوچن */}
-        <div className="nav-right">
-          <span className="logo">مِرفاق</span>
-          <span className="slogan">خيرُ رفيقٍ لخيرِ طريق</span>
+    <header className="top-bar">
+      <div className="header-left">
+        <div className="date-time">
+          <p className="current-date">
+            {dateText || "…"}
+          </p>
         </div>
-
-        {/* الشمال: الروابط */}
-        <div className="nav-left">
-          <a href="/">الرئيسية</a>
-          <a href="/missed-fasting">الصيام</a>
-          <a href="/tasbih">السبحة</a>
-          <a href="/azkar">الأذكار</a>
-        </div>
-
       </div>
-    </nav>
+    </header>
   );
 }

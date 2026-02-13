@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 const dailyTools = [
   { title: "القرآن الكريم", icon: "📖", path: "/quran" },
+  { title: "رمضان", icon: "🌛", path: "/quran" },
   { title: "الأذكار", icon: "📿", path: "/azkar" },
   { title: "السبحة الإلكترونية", icon: "🔵", path: "/tasbih" },
   { title: "الصلوات الفائتة", icon: "🕰️", path: "/missed-prayers" },
