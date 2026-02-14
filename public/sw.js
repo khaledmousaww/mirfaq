@@ -13,3 +13,28 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
+
+
+const CACHE_NAME = "ramadan-cache-v1";
+
+self.addEventListener("install", (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll([
+        "/",
+        "/ramadan",
+        "/lantern1.png",
+        "/lantern2.png",
+      ]);
+    })
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((res) => {
+      return res || fetch(event.request);
+    })
+  );
+});

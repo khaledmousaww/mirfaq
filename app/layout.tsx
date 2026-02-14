@@ -4,7 +4,7 @@ import RegisterSW from "./components/RegisterSW";
 
 const tajawal = Tajawal({
   subsets: ["arabic"],
-  weight: ["300", "400", "500", "700"],
+  weight: ["300","400","500","700"]
 });
 
 export const metadata = {
@@ -21,9 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={tajawal.className}>
-        {/* تسجيل الـ Service Worker */}
         <RegisterSW />
-
         {children}
       </body>
     </html>

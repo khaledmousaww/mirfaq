@@ -1,0 +1,159 @@
+.ramadan-page{
+background:#041f1f;
+min-height:100vh;
+padding:40px 20px;
+position:relative;
+overflow:hidden;
+}
+
+.title{
+text-align:center;
+color:gold;
+margin-bottom:25px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+gap:18px;
+}
+
+.ramadan-card{
+background:#063434;
+border-radius:16px;
+padding:16px;
+border:1px solid rgba(255,215,0,.3);
+box-shadow:0 0 20px rgba(255,215,0,.15);
+color:#fff;
+transition:.3s;
+}
+
+.ramadan-card:hover{
+transform:translateY(-6px);
+box-shadow:0 0 25px gold;
+}
+
+.card-head{
+border-bottom:1px solid rgba(255,255,255,.1);
+margin-bottom:10px;
+font-weight:700;
+}
+
+.times p{
+margin:5px 0;
+font-size:14px;
+}
+
+/* 🌙 الهلال */
+.moon{
+position:absolute;
+top:25px;
+right:30px;
+width:80px;
+z-index:9999;
+height:90px;
+border-radius:70%;
+box-shadow:20px 0 0 gold;
+}
+
+/* ⭐ نجوم */
+.stars{
+position:absolute;
+inset:0;
+background-image:radial-gradient(#fff 1px,transparent 1px);
+background-size:40px 40px;
+opacity:.15;
+}
+
+/* 🏮 الفوانيس */
+.lantern{
+position:absolute;
+z-index:9999;
+width:90px;
+animation:swing 4s infinite ease-in-out;
+}
+.lantern-left{left:20px;top:0;}
+.lantern-right{right:20px;top:0;}
+
+@keyframes swing{
+0%{transform:rotate(-5deg)}
+50%{transform:rotate(5deg)}
+100%{transform:rotate(-5deg)}
+}
+
+/* 📢 سبونسر */
+.sponsor{
+margin-top:40px;
+text-align:center;
+color:gold;
+font-size:20px;
+}
+
+
+/* 🌙 Navbar */
+.ramadan-navbar{
+position:sticky;
+top:0;
+z-index:50;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 20px;
+background:#032b2b;
+border-bottom:1px solid rgba(255,215,0,.3);
+}
+
+.ramadan-navbar a{
+color:#fff;
+margin-left:12px;
+text-decoration:none;
+font-weight:600;
+}
+
+.logo{
+color:gold;
+font-weight:900;
+font-size:18px;
+
+}
+
+.tag{
+color:#ffd700aa;
+margin-right:8px;
+}
+
+/* 🌙 Footer */
+.ramadan-footer{
+margin-top:60px;
+padding:20px;
+text-align:center;
+background:#021919;
+color:gold;
+border-top:1px solid rgba(255,215,0,.3);
+}
+
+
+
+
+.ramadan-banner{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:40px 0 60px;
+}
+
+.ramadan-banner img{
+  max-width:420px;
+  width:90%;
+  height:auto;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
+  animation: floatRamadan 4s ease-in-out infinite;
+}
+
+/* حركة رمضانية ناعمة */
+@keyframes floatRamadan{
+  0%{ transform: translateY(0px); }
+  50%{ transform: translateY(-8px); }
+  100%{ transform: translateY(0px); }
+}

@@ -8,20 +8,15 @@ import Footer from "./components/Footer";
 
 export default function HomePage() {
   return (
-
-
-
-
-
-
-
-
-
-
     <main>
+
+      {/* الناف بار */}
       <Navbar />
 
+      {/* التوب بار (التاريخ - الوقت) */}
       <TopBar />
+
+   
 
       {/* تنبيه المواقيت */}
       <PrayerNotice />
@@ -37,6 +32,7 @@ export default function HomePage() {
 
       {/* الفوتر */}
       <Footer />
+
     </main>
   );
 }
