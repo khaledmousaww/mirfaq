@@ -14,6 +14,7 @@ export default function Footer() {
       <div className="footer-quote">
         <p>ابدأ يومك بصلاتك، ولا تنسَ الدعاء.</p>
         <p>هذا العمل خالص لوجه الله ولا يتم التربح منه</p>
+        <h3>هذه نسخة تجريبية وجاري العمل علي تعفيل النسخة الاصلية من مرفاق</h3>
       </div>
 
       <div className="footer-copy">

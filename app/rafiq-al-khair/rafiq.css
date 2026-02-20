@@ -1,0 +1,104 @@
+.khair-page{
+  min-height:100vh;
+  padding:40px 20px;
+  text-align:center;
+  background:linear-gradient(180deg,#020617,#020617,#07121f);
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ⭐ هلال */
+.moon{
+  position:absolute;
+  top:40px;
+  right:197px;
+  width:80px;
+  height:80px;
+  border-radius:100px;
+  box-shadow:-30px 0 0 #ffd700;
+  opacity:.3;
+}
+
+
+/* ⭐ نجوم */
+.stars{
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(#fff 1px,transparent 1px);
+  background-size:40px 40px;
+  opacity:.1;
+}
+
+.khair-title{
+  font-size:2rem;
+  margin-bottom:30px;
+  color:#facc15;
+}
+
+.goal-card{
+  background:#0f172a;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+.progress-bar{
+  height:10px;
+  background:#1e293b;
+  border-radius:20px;
+  margin-top:10px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,#22c55e,#4ade80);
+}
+
+.progress-text{
+  display:block;
+  margin-top:10px;
+  color:#94a3b8;
+}
+
+.coming-box{
+  background:#0b1220;
+  padding:20px;
+  border-radius:18px;
+  margin-bottom:30px;
+}
+
+.disabled-btn{
+  margin-top:12px;
+  padding:12px 20px;
+  border-radius:14px;
+  border:none;
+  background:#334155;
+  color:#cbd5f5;
+  cursor:not-allowed;
+}
+
+.initiatives{
+  margin-bottom:30px;
+}
+
+.initiative-card{
+  background:#0f172a;
+  padding:16px;
+  margin:10px auto;
+  border-radius:16px;
+  max-width:320px;
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+
+.trust-box{
+  background:#020617;
+  border:1px solid #334155;
+  padding:15px;
+  border-radius:14px;
+  color:#94a3b8;
+  max-width:420px;
+  margin:0 auto;
+}

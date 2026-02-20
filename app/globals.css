@@ -655,3 +655,81 @@ body.dark .prayer-notice {
   border-radius: 18px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
+
+
+.xp-popup{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#16a34a;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:20px;
+  font-weight:bold;
+  animation:pop 1s ease;
+  z-index:9999;
+}
+
+@keyframes pop{
+  0%{opacity:0; transform:translate(-50%,30px)}
+  50%{opacity:1}
+  100%{opacity:0}
+}
+
+
+.ultra-adhan-overlay{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle,#020617,#000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+  animation:fadeIn 0.6s ease;
+}
+
+.ultra-adhan-box{
+  position:relative;
+  background:#020617;
+  padding:40px;
+  border-radius:25px;
+  text-align:center;
+  color:#fff;
+  box-shadow:0 0 60px rgba(255,215,0,0.15);
+}
+
+.ultra-adhan-box h1{
+  font-size:22px;
+  opacity:.9;
+}
+
+.ultra-adhan-box h2{
+  font-size:36px;
+  margin-top:10px;
+  color:#facc15;
+}
+
+.ultra-adhan-box button{
+  margin-top:25px;
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(45deg,#22c55e,#16a34a);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.adhan-glow{
+  position:absolute;
+  inset:-30px;
+  background:radial-gradient(circle,rgba(250,204,21,.15),transparent);
+  filter:blur(40px);
+  z-index:-1;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:scale(.9);}
+  to{opacity:1;transform:scale(1);}
+}

@@ -1,6 +1,8 @@
 import "./globals.css";
 import { Tajawal } from "next/font/google";
 import RegisterSW from "./components/RegisterSW";
+import AdhanUltraEngine from "./components/AdhanUltraEngine";
+
 
 const tajawal = Tajawal({
   subsets: ["arabic"],
@@ -12,6 +14,7 @@ export const metadata = {
   description: "خير رفيق لخير طريق",
   manifest: "/manifest.json",
 };
+
 
 export default function RootLayout({
   children,
@@ -27,3 +30,4 @@ export default function RootLayout({
     </html>
   );
 }
+<AdhanUltraEngine />

@@ -7,7 +7,9 @@ const dailyTools = [
   { title: "رمضان", icon: "🌛", path: "/ramadan" },
   { title: "الأذكار", icon: "📿", path: "/azkar" },
   { title: "السبحة الإلكترونية", icon: "🔵", path: "/tasbih" },
+  { title: " مرفاق الخير", icon: "💰", path: "/rafiq-al-khair" },
   { title: "الصلوات الفائتة", icon: "🕰️", path: "/missed-prayers" },
+  { title: "أيام الصيام الفائتة", icon: "🌙", path: "/missed-fasting" },
 ];
 
 const trackingTools = [

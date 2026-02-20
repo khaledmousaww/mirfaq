@@ -38,3 +38,14 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
+
+self.addEventListener("push", function(e){
+
+  const data = e.data?.json() || {};
+
+  self.registration.showNotification("مرفاق",{
+    body: data.body || "موعد الصلاة الآن",
+    icon:"/icon-192.png"
+  });
+
+});

@@ -1,0 +1,110 @@
+.settings-ultra{
+  max-width:650px;
+  margin:40px auto;
+  padding:20px;
+}
+
+/* ===== PLAYER HEADER ===== */
+.player-header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.player-box{
+  margin-top:10px;
+  background:#0f172a;
+  color:#fff;
+  padding:12px;
+  border-radius:14px;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 15px 30px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+}
+
+.card h2{
+  margin-bottom:10px;
+}
+
+/* ===== SETTING ITEM ===== */
+.setting-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 0;
+  border-bottom:1px solid #eee;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.setting-item:last-child{
+  border-bottom:none;
+}
+
+.setting-item h3{
+  margin:0;
+}
+
+.setting-item p{
+  margin:4px 0 0;
+  font-size:.85rem;
+  color:#666;
+}
+
+/* ===== RIPPLE EFFECT ===== */
+.ripple:active::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.05);
+}
+
+/* ===== TOGGLE ULTRA ===== */
+.toggle{
+  width:52px;
+  height:28px;
+  background:#ddd;
+  border-radius:30px;
+  position:relative;
+  transition:.25s;
+}
+
+.toggle span{
+  position:absolute;
+  width:22px;
+  height:22px;
+  background:#fff;
+  border-radius:50%;
+  top:3px;
+  left:4px;
+  transition:.25s;
+  box-shadow:0 4px 8px rgba(0,0,0,.2);
+}
+
+.toggle.on{
+  background:#22c55e;
+}
+
+.toggle.on span{
+  left:26px;
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode{
+  background:#020617;
+  color:#fff;
+}

@@ -3,63 +3,72 @@
 import { useEffect, useState } from "react";
 
 export default function TopBar() {
-  const [now, setNow] = useState(new Date());
-  const [dark, setDark] = useState(false);
-  const [simple, setSimple] = useState(false);
-  const [focus, setFocus] = useState(false);
 
-  // تحديث الوقت
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const [time,setTime] = useState("");
+  const [date,setDate] = useState("");
 
-  // تحميل الإعدادات من localStorage
-  useEffect(() => {
-    setDark(localStorage.getItem("darkMode") === "true");
-  }, []);
+  useEffect(()=>{
 
-  useEffect(() => {
-    document.body.classList.toggle("dark", dark);
-    localStorage.setItem("darkMode", String(dark));
-  }, [dark]);
+    function update(){
 
-  const gregorian = now.toLocaleDateString("ar-EG", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+      const now = new Date();
 
-  const hijri = now.toLocaleDateString("ar-SA-u-ca-islamic", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+      setTime(
+        now.toLocaleTimeString("ar-EG",{
+          hour:"2-digit",
+          minute:"2-digit",
+          second:"2-digit",
+          hour12:true
+        })
+      );
 
-  return (
+      setDate(
+        now.toLocaleDateString("ar-EG",{
+          weekday:"long",
+          day:"numeric",
+          month:"long",
+          year:"numeric"
+        })
+      );
+    }
+
+    update();
+
+    const interval = setInterval(update,1000);
+
+    return ()=>clearInterval(interval);
+
+  },[]);
+
+  return(
     <header className="top-bar">
       <div className="header-left">
         <div className="date-time">
-          <p className="current-date">
-            {gregorian} | {hijri}
-          </p>
-          <p className="current-time">
-            {now.toLocaleTimeString("ar-EG")}
-          </p>
-        </div>
 
-        <div className="header-buttons">
-          <button onClick={() => setDark(!dark)}>🌙 الوضع الليلي</button>
-          <button onClick={() => setSimple(!simple)}>🔹 Simple Mode</button>
-          <button onClick={() => setFocus(!focus)}>🎯 Focus Mode</button>
-        </div>
-      </div>
+          {/* 👇 أهم نقطة: ما نعرضش قبل ما client يشتغل */}
+          {time && (
+            <>
+              <p className="current-date">{date}</p>
+              <p className="current-time">{time}</p>
+            </>
+          )}
 
-      <div className="header-right">
-        <img src="test.png" alt="صورة دينية" className="religious-img" />
-        <p className="slogan">مِرفاق.. خيرُ رفيقٍ لخيرِ طريق.</p>
-      </div>
+        </div>
+      </div> 
     </header>
   );
 }
+
+
+
+useEffect(()=>{
+
+  function warn(e:any){
+    alert("⏳ الصلاة بعد دقيقة");
+  }
+
+  window.addEventListener("adhanWarning",warn);
+
+  return ()=>window.removeEventListener("adhanWarning",warn);
+
+},[]);

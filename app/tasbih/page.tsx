@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useXP } from "../hooks/useXP";
+import { questTasbih } from "../hooks/useQuestSystem";
 
-/* ===== أذكار افتراضية موسّعة ===== */
+/* ===== أذكار افتراضية ===== */
 const DEFAULT_AZKAR = [
   "سبحان الله",
   "الحمد لله",
@@ -12,18 +14,10 @@ const DEFAULT_AZKAR = [
   "سبحان الله وبحمده",
   "سبحان الله العظيم",
   "لا حول ولا قوة إلا بالله",
-  "سبحان الله والحمد لله ولا إله إلا الله والله أكبر (الباقيات الصالحات)",
-  "أستغفر الله الذي لا إله إلا هو الحي القيوم وأتوب إليه",
   "اللهم صل وسلم على نبينا محمد",
-  "اللهم إني أسألك الهدى والتقى والعفاف والغنى",
-  "رضيت بالله ربا، وبالإسلام دينا، وبمحمد ﷺ نبيا",
-  "حسبي الله لا اله الا هو عليه توكلت وهو رب العرش العظيم",
-  "اللهم اغفر لي",
-  "يا حي يا قيوم برحمتك أستغيث، أصلح لي شأني كله، ولا تكلني إلى نفسي طرفة عين",
-  "اللهم اعني على ذكرك وشكرك وحسن عبادتك",
 ];
 
-/* ===== رسائل تحفيزية شبابية ===== */
+/* ===== رسائل تحفيزية ===== */
 const MOTIVATION_TEXTS = [
   "🔥 كمل، انت بتعمل حاجة عظيمة",
   "💪 كل ضغطة في ميزان حسناتك",
@@ -34,7 +28,10 @@ const MOTIVATION_TEXTS = [
 ];
 
 export default function TasbihPage() {
-  /* ===== الحالات ===== */
+
+  /* ⭐ نظام XP المركزي */
+  const { addXP, addTasbih } = useXP();
+
   const [azkar, setAzkar] = useState<string[]>(DEFAULT_AZKAR);
   const [zikr, setZikr] = useState(DEFAULT_AZKAR[0]);
   const [count, setCount] = useState(0);
@@ -48,14 +45,13 @@ export default function TasbihPage() {
 
   const [motivation, setMotivation] = useState("");
 
-  /* ===== تحميل البيانات ===== */
+  /* ===== تحميل بيانات محفوظة ===== */
   useEffect(() => {
     const savedAzkar = localStorage.getItem("custom_azkar");
     const savedTargets = localStorage.getItem("tasbih_targets");
 
     if (savedAzkar) {
-      const parsed = JSON.parse(savedAzkar);
-      setAzkar([...DEFAULT_AZKAR, ...parsed]);
+      setAzkar([...DEFAULT_AZKAR, ...JSON.parse(savedAzkar)]);
     }
 
     if (savedTargets) {
@@ -74,7 +70,7 @@ export default function TasbihPage() {
     localStorage.setItem(`tasbih_${zikr}`, String(count));
   }, [count, zikr]);
 
-  /* ===== تغيير رسالة التحفيز ===== */
+  /* ===== رسائل تحفيز ===== */
   useEffect(() => {
     if (count > 0 && count % 10 === 0) {
       setMotivation(
@@ -85,10 +81,32 @@ export default function TasbihPage() {
     }
   }, [count]);
 
-  /* ===== تسبيح ===== */
-  const increment = () => setCount((c) => c + 1);
+  /* =========================================
+      ⭐⭐⭐ الربط الصحيح مع RPG PRO ⭐⭐⭐
+  ========================================= */
 
-  /* ===== تصفير ===== */
+
+const increment = () => {
+  setCount((c) => {
+    const newCount = c + 1;
+
+    addTasbih();   // ⭐ مرة واحدة بس
+    addXP(1);      // ⭐ XP
+
+    if (newCount % 10 === 0) {
+      addXP(1);
+    }
+
+    questTasbih();
+
+    window.dispatchEvent(new Event("xpUpdate"));
+
+    return newCount;
+  });
+};
+
+
+
   const reset = () => setCount(0);
 
   /* ===== إضافة ذكر ===== */
@@ -102,6 +120,7 @@ export default function TasbihPage() {
     const customOnly = updated.filter(
       (z) => !DEFAULT_AZKAR.includes(z)
     );
+
     localStorage.setItem("custom_azkar", JSON.stringify(customOnly));
 
     if (newZikrTarget) {
@@ -113,7 +132,6 @@ export default function TasbihPage() {
     setCount(0);
   };
 
-  /* ===== إضافة هدف ثابت ===== */
   const addCustomTarget = () => {
     if (!customTarget) return;
 
@@ -121,6 +139,7 @@ export default function TasbihPage() {
     if (targets.includes(num)) return;
 
     const updated = [...targets, num].sort((a, b) => a - b);
+
     setTargets(updated);
     setTarget(num);
 
@@ -132,26 +151,25 @@ export default function TasbihPage() {
     <main style={{ maxWidth: 460, margin: "40px auto", padding: 16, textAlign: "center" }}>
       <h1>📿 السبحة</h1>
 
-      {/* اختيار الذكر */}
       <select value={zikr} onChange={(e) => setZikr(e.target.value)} style={selectStyle}>
         {azkar.map((z) => (
-          <option key={z} value={z}>{z}</option>
+          <option key={z}>{z}</option>
         ))}
       </select>
 
-      {/* اختيار الهدف */}
       <select
         value={target ?? ""}
-        onChange={(e) => setTarget(e.target.value ? Number(e.target.value) : null)}
+        onChange={(e) =>
+          setTarget(e.target.value ? Number(e.target.value) : null)
+        }
         style={selectStyle}
       >
         {targets.map((t) => (
-          <option key={t} value={t}>{t}</option>
+          <option key={t}>{t}</option>
         ))}
         <option value="">بدون هدف</option>
       </select>
 
-      {/* إضافة هدف جديد */}
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
         <input
           type="number"
@@ -160,27 +178,24 @@ export default function TasbihPage() {
           onChange={(e) => setCustomTarget(e.target.value)}
           style={inputStyle}
         />
-        <button onClick={addCustomTarget} style={btnGreen}>إضافة</button>
+        <button onClick={addCustomTarget} style={btnGreen}>
+          إضافة
+        </button>
       </div>
 
-      {/* دائرة التسبيح */}
       <div onClick={increment} style={circleStyle}>
         <div style={{ fontSize: "3.5rem", fontWeight: "bold" }}>{count}</div>
         <div style={{ fontSize: "0.9rem", opacity: 0.9 }}>اضغط للتسبيح</div>
       </div>
 
-      {/* رسالة الهدف */}
       {target && count >= target && (
         <div style={successBox}>🎉 وصلت للهدف، شغل عالي 👌</div>
       )}
 
-      {/* تحفيز */}
       {motivation && <div style={motivationBox}>{motivation}</div>}
 
-      {/* تصفير */}
       <button onClick={reset} style={resetBtn}>تصفير العداد</button>
 
-      {/* إضافة ذكر */}
       <div style={{ marginTop: 30, borderTop: "1px solid #eee", paddingTop: 20 }}>
         <h3>➕ إضافة ذكر</h3>
 
@@ -208,7 +223,9 @@ export default function TasbihPage() {
   );
 }
 
+
 /* ===== Styles ===== */
+
 const selectStyle = {
   padding: 10,
   borderRadius: 12,
