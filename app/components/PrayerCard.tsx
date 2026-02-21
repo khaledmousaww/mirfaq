@@ -20,7 +20,7 @@ const PRAYERS = ["الفجر","الظهر","العصر","المغرب","العش
 export default function PrayerCard({ name, time, prayerIndex }: Props) {
 
   /* ⭐ XP SYSTEM */
-  const { addXP, addPrayedDay, unlockBadge, getStats } = useXP();
+  const { addXP,  unlockBadge, getStats } = useXP();
 
   /* ===== مفاتيح اليوم ===== */
   const [today, setToday] = useState("");
@@ -83,7 +83,7 @@ export default function PrayerCard({ name, time, prayerIndex }: Props) {
       localStorage.setItem(todayKey,"true");
 
       addXP(50);            // XP كبير لليوم الكامل
-      addPrayedDay();       // ⭐ أهم نقطة
+          // ⭐ أهم نقطة
       unlockBadge("prayer_day");
     }
 
