@@ -7,7 +7,7 @@ import PrayerNotice from "./components/PrayerNotice";
 import Footer from "./components/Footer";
 
 
-
+   <TopBar />
 
 
 
@@ -20,10 +20,6 @@ export default function HomePage() {
 
       {/* التوب بار (التاريخ - الوقت) */}
       <TopBar />
-
-   
-
-
       {/* تنبيه المواقيت */}
       <PrayerNotice />
 

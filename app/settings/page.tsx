@@ -83,7 +83,7 @@ export default function SettingsPage(){
 
       {/* ===== رمضان ===== */}
       <section className="card">
-        <h2>🌙 زينة رمضان</h2>
+        <h2> زينة رمضان🌙</h2>
         <Item title="الفوانيس" active={data.lanterns} onClick={()=>update("lanterns")}/>
         <Item title="النجوم الليلية" active={data.stars} onClick={()=>update("stars")}/>
         <Item title="الهلال الذهبي" active={data.moon} onClick={()=>update("moon")}/>
@@ -91,19 +91,19 @@ export default function SettingsPage(){
 
       {/* ===== النظام ===== */}
       <section className="card">
-        <h2>⚔️ نظام الإنجازات</h2>
+        <h2> نظام الإنجازات⚔️</h2>
         <Item title="تشغيل RPG" active={data.rpg} onClick={()=>update("rpg")}/>
       </section>
 
       {/* ===== المظهر ===== */}
       <section className="card">
-        <h2>🎨 المظهر</h2>
+        <h2> المظهر🎨</h2>
         <Item title="الوضع الليلي" active={data.nightMode} onClick={()=>update("nightMode")}/>
       </section>
 
       {/* ===== Advanced ===== */}
       <section className="card danger">
-        <h2>🧨 إعادة ضبط</h2>
+        <h2> إعادة ضبط🧨</h2>
 
         <button onClick={()=>{localStorage.clear();location.reload();}}>
           إعادة ضبط التطبيق بالكامل
