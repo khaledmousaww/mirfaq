@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 
 /* ===========================================
-        🕌 ULTRA ADHAN ENGINE (FIXED)
+        🕌 ULTRA ADHAN ENGINE
 =========================================== */
 
 type Settings = {
@@ -31,17 +31,9 @@ const DEFAULT_SETTINGS: Settings = {
 };
 
 export default function AdhanUltraEngine() {
-  /* =============================
-        🧠 Prayer Times FIX TYPE
-  ==============================*/
-
-  const prayer = usePrayerTimes();
-
-  // ✅ FIX TypeScript Error (times may not exist)
-  const times =
-    prayer && typeof prayer === "object" && "times" in prayer
-      ? (prayer as any).times
-      : null;
+  /* ⭐ FIX TYPE ERROR نهائياً */
+  const prayer: any = usePrayerTimes();
+  const times = prayer?.times || null;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -116,12 +108,10 @@ export default function AdhanUltraEngine() {
       const prayerSettings = settings.prayers[name];
       if (!prayerSettings?.enabled) return;
 
-      /* 🔔 وقت الأذان */
       if (current === time) {
         play(prayerSettings.sound);
       }
 
-      /* ⭐ Pre Adhan */
       const [h, m] = time.split(":").map(Number);
       const pre = new Date();
       pre.setHours(h, m - settings.preAdhan, 0, 0);
@@ -130,9 +120,7 @@ export default function AdhanUltraEngine() {
       const preMM = pre.getMinutes().toString().padStart(2, "0");
 
       if (current === `${preHH}:${preMM}`) {
-        if ("Notification" in window) {
-          new Notification("اقترب موعد الصلاة 🕌");
-        }
+        new Notification("اقترب موعد الصلاة 🕌");
       }
     });
   }
@@ -147,7 +135,7 @@ export default function AdhanUltraEngine() {
     }, 15000);
 
     return () => clearInterval(loop);
-  }, [times]); // ✅ FIXED (كان times.? غلط)
+  }, [times]);
 
   return null;
 }
