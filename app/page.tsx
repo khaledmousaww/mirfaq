@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "./components/Navbar";
 import TopBar from "./components/TopBar";
 import IntroHint from "./components/IntroHint";
@@ -7,7 +9,7 @@ import PrayerNotice from "./components/PrayerNotice";
 import Footer from "./components/Footer";
 
 
-   <TopBar />
+ 
 
 
 

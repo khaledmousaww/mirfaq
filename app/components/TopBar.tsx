@@ -10,7 +10,6 @@ export default function TopBar() {
   useEffect(()=>{
 
     function update(){
-
       const now = new Date();
 
       setTime(
@@ -35,8 +34,19 @@ export default function TopBar() {
     update();
 
     const interval = setInterval(update,1000);
-
     return ()=>clearInterval(interval);
+
+  },[]);
+
+  // ✅ حطينا useEffect التاني جوه الكمبوننت
+  useEffect(()=>{
+
+    function warn(){
+      alert("⏳ الصلاة بعد دقيقة");
+    }
+
+    window.addEventListener("adhanWarning",warn);
+    return ()=>window.removeEventListener("adhanWarning",warn);
 
   },[]);
 
@@ -44,31 +54,14 @@ export default function TopBar() {
     <header className="top-bar">
       <div className="header-left">
         <div className="date-time">
-
-          {/* 👇 أهم نقطة: ما نعرضش قبل ما client يشتغل */}
           {time && (
             <>
               <p className="current-date">{date}</p>
               <p className="current-time">{time}</p>
             </>
           )}
-
         </div>
       </div> 
     </header>
   );
 }
-
-
-
-useEffect(()=>{
-
-  function warn(e:any){
-    alert("⏳ الصلاة بعد دقيقة");
-  }
-
-  window.addEventListener("adhanWarning",warn);
-
-  return ()=>window.removeEventListener("adhanWarning",warn);
-
-},[]);
