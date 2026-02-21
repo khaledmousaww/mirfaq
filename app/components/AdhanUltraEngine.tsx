@@ -2,10 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-/* ===========================================
-        🕌 ULTRA ADHAN ENGINE (MANUAL MODE)
-=========================================== */
-
 type Settings = {
   volume:number;
   preAdhan:number;
