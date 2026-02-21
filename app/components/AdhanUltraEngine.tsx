@@ -36,7 +36,7 @@ export default function AdhanUltraEngine() {
   ============================== */
 
   const prayer = usePrayerTimes();
-  const times = (prayer as any)?.times ?? null; // ⭐ Fix TypeScript Error
+const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeScript Error
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
