@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
 
 /* ===========================================
-        🕌 ULTRA ADHAN ENGINE
+        🕌 ULTRA ADHAN ENGINE (FIXED)
 =========================================== */
 
 type Settings = {
@@ -32,11 +32,16 @@ const DEFAULT_SETTINGS: Settings = {
 
 export default function AdhanUltraEngine() {
   /* =============================
-        🧠 Prayer Times
-  ============================== */
+        🧠 Prayer Times FIX TYPE
+  ==============================*/
 
   const prayer = usePrayerTimes();
-const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeScript Error
+
+  // ✅ FIX TypeScript Error (times may not exist)
+  const times =
+    prayer && typeof prayer === "object" && "times" in prayer
+      ? (prayer as any).times
+      : null;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -45,7 +50,7 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
 
   /* =============================
         🔊 تشغيل الصوت
-  ============================== */
+  ==============================*/
   function play(sound: string) {
     const settings: Settings =
       JSON.parse(localStorage.getItem("adhanSettings") || "null") ||
@@ -57,7 +62,6 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
 
     const audio = new Audio(`/adhan/${sound}.mp3`);
     audio.volume = settings.volume ?? 0.8;
-
     audio.play().catch(() => {});
 
     audioRef.current = audio;
@@ -65,22 +69,21 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
 
   /* =============================
         ⏳ حساب أقرب صلاة
-  ============================== */
+  ==============================*/
   function calcNext() {
     if (!times) return;
 
     const now = new Date();
 
-    const list = Object.entries(times).map(([name, time]) => {
-      const [h, m] = (time as string).split(":").map(Number);
+    const list = Object.entries(times).map(([name, time]: any) => {
+      const [h, m] = time.split(":").map(Number);
       const date = new Date();
       date.setHours(h, m, 0, 0);
-
       return { name, date };
     });
 
     const upcoming =
-      list.find((p) => p.date.getTime() > now.getTime()) || list[0];
+      list.find((p: any) => p.date.getTime() > now.getTime()) || list[0];
 
     setNextPrayer(upcoming.name);
 
@@ -94,7 +97,7 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
 
   /* =============================
         🧠 فحص الأذان
-  ============================== */
+  ==============================*/
   function checkAdhan() {
     if (!times) return;
 
@@ -109,7 +112,7 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
 
     const current = `${hh}:${mm}`;
 
-    Object.entries(times).forEach(([name, time]) => {
+    Object.entries(times).forEach(([name, time]: any) => {
       const prayerSettings = settings.prayers[name];
       if (!prayerSettings?.enabled) return;
 
@@ -119,8 +122,7 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
       }
 
       /* ⭐ Pre Adhan */
-      const [h, m] = (time as string).split(":").map(Number);
-
+      const [h, m] = time.split(":").map(Number);
       const pre = new Date();
       pre.setHours(h, m - settings.preAdhan, 0, 0);
 
@@ -128,7 +130,7 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
       const preMM = pre.getMinutes().toString().padStart(2, "0");
 
       if (current === `${preHH}:${preMM}`) {
-        if (Notification.permission === "granted") {
+        if ("Notification" in window) {
           new Notification("اقترب موعد الصلاة 🕌");
         }
       }
@@ -137,18 +139,15 @@ const times = prayer && "times" in prayer ? prayer.times : null;// ⭐ Fix TypeS
 
   /* =============================
         🔥 ENGINE LOOP
-  ============================== */
+  ==============================*/
   useEffect(() => {
-    if (!times) return;
-
     const loop = setInterval(() => {
       calcNext();
       checkAdhan();
     }, 15000);
 
     return () => clearInterval(loop);
-  }, [prayer]); // ⭐ Fix Hydration + Typescript
+  }, [times]); // ✅ FIXED (كان times.? غلط)
 
-  /* UI خفي */
   return null;
 }
