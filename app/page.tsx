@@ -5,16 +5,6 @@ import DailyPrayers from "./components/DailyPrayers";
 import QuickAccess from "./components/QuickAccess";
 import PrayerNotice from "./components/PrayerNotice";
 import Footer from "./components/Footer";
-import AdhanEngine from "./components/AdhanUltraEngine";
-
-
-
-
-
-
-
-
-
 
 
 
@@ -32,7 +22,7 @@ export default function HomePage() {
       <TopBar />
 
    
-<AdhanEngine />
+
 
       {/* تنبيه المواقيت */}
       <PrayerNotice />

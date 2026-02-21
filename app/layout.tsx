@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Tajawal } from "next/font/google";
 import RegisterSW from "./components/RegisterSW";
-import AdhanUltraEngine from "./components/AdhanUltraEngine";
+
 
 
 const tajawal = Tajawal({
@@ -30,4 +30,4 @@ export default function RootLayout({
     </html>
   );
 }
-<AdhanUltraEngine />
+
